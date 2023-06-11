@@ -54,25 +54,27 @@ router.post("/", async (req, res) => {
 router.post("/login", async (req, res) => {
     let validBody = validLogin(req.body);
     if (validBody.error) {
-        return res.status(400).json(validBody.error.details);
+      return res.status(400).json(validBody.error.details);
     }
     try {
-        let user = await UserModel.findOne({ email: req.body.email })
-        if (!user) {
-            return res.status(401).json({ msg: "Password or email is worng ,code:1" })
-        }
-        let authPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!authPassword) {
-            return res.status(401).json({ msg: "Password or email is worng ,code:2" });
-        }
-        let token = createToken(user._id, user.role);
-        res.json({ token });
+      let user = await UserModel.findOne({ email: req.body.email })
+      if (!user) {
+        return res.status(401).json({ msg: "Password or email is worng ,code:2" })
+      }
+  
+      let authPassword = await bcrypt.compare(req.body.password, user.password);
+      if (!authPassword) {
+        return res.status(401).json({ msg: "Password or email is worng ,code:1" });
+      }
+  
+      let token = createToken(user._id, user.role);
+      res.json({ token });
     }
     catch (err) {
-        console.log(err)
-        res.status(500).json({ msg: "err", err })
+      console.log(err)
+      res.status(500).json({ msg: "err", err })
     }
-})
+  })
 
 router.put("/:idEdit", auth, async (req, res) => {
     let validBody = validUser(req.body);

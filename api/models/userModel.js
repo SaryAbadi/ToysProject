@@ -25,7 +25,8 @@ exports.validUser = (_reqBody) => {
       lastName: Joi.string().min(2).max(50).required(),
     },
     email: Joi.string().min(2).max(99).email().required(),
-    password: Joi.string().min(3).max(99).required()
+    password: Joi.string().min(3).max(99).required(),
+    role:Joi.string()
   })
   return joiSchema.validate(_reqBody);
 }
